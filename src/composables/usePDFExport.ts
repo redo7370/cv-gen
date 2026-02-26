@@ -1,4 +1,4 @@
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import CVA4Template from '@/components/CVA4Template.vue'
 import html2pdf from 'html2pdf.js'
 
@@ -18,21 +18,20 @@ export function usePDFExport() {
       return
     }
 
-    // Sync hidden PDF template dark mode with current state from localStorage
-    // (the preview instance updates localStorage on toggle, but the hidden instance only reads on mount)
-    if (cvPdfA4Ref.value) {
-      const savedIsA4Dark = localStorage.getItem('cv-a4-dark-mode') === 'true'
-      if (savedIsA4Dark !== cvPdfA4Ref.value.isA4Dark) {
-        cvPdfA4Ref.value.toggleA4Dark()
-      }
-      await nextTick()
-    }
-
     const templateElement = container.querySelector('.cv-a4-template') as HTMLElement | null
     if (!templateElement) {
       console.error('PDF Template Element not found')
       return
     }
+
+    // Sync hidden PDF template dark mode with current localStorage value.
+    // The preview instance writes to localStorage on toggle, but the hidden
+    // export instance only reads it once on mount.  In production builds,
+    // accessing the exposed ref via the component ref can be unreliable,
+    // so we directly toggle the CSS class & data-attribute on the DOM element.
+    const shouldBeDark = localStorage.getItem('cv-a4-dark-mode') === 'true'
+    templateElement.classList.toggle('dark-mode', shouldBeDark)
+    templateElement.setAttribute('data-dark', String(shouldBeDark))
 
     // Make container visible for html2canvas rendering
     container.style.position = 'fixed'
