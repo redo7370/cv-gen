@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import CVA4Template from '@/components/CVA4Template.vue'
 import html2pdf from 'html2pdf.js'
 
@@ -16,6 +16,16 @@ export function usePDFExport() {
     if (!container) {
       console.error('PDF container not found')
       return
+    }
+
+    // Sync hidden PDF template dark mode with current state from localStorage
+    // (the preview instance updates localStorage on toggle, but the hidden instance only reads on mount)
+    if (cvPdfA4Ref.value) {
+      const savedIsA4Dark = localStorage.getItem('cv-a4-dark-mode') === 'true'
+      if (savedIsA4Dark !== cvPdfA4Ref.value.isA4Dark) {
+        cvPdfA4Ref.value.toggleA4Dark()
+      }
+      await nextTick()
     }
 
     const templateElement = container.querySelector('.cv-a4-template') as HTMLElement | null
