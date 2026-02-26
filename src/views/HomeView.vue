@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useLanguage } from '@/composables/useLanguage'
 
 const router = useRouter()
+const { t } = useLanguage()
 
 const navigateToCreate = () => {
   router.push('/create')
@@ -33,14 +35,14 @@ onMounted(() => {
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        <h1 class="hero-title">CV Generator</h1>
-        <p class="hero-subtitle">Create Professional Resumes in Minutes</p>
+        <h1 class="hero-title">{{ t.home.heroTitle }}</h1>
+        <p class="hero-subtitle">{{ t.home.heroSubtitle }}</p>
         <div class="hero-decoration">
           <div class="decoration-line"></div>
         </div>
       </div>
       <div class="scroll-indicator">
-        <span>Scroll to learn more</span>
+        <span>{{ t.home.scrollHint }}</span>
         <div class="scroll-arrow">↓</div>
       </div>
     </section>
@@ -50,86 +52,64 @@ onMounted(() => {
       <div class="features-container">
         <div class="feature-card">
           <div class="feature-icon">📄</div>
-          <h2>Professional Templates</h2>
-          <p>
-            Choose from beautifully designed CV templates that make a lasting impression. Our
-            layouts are optimized for both digital viewing and printing, ensuring your resume looks
-            perfect in any format.
-          </p>
-          <span class="dev-badge">More templates in development</span>
+          <h2>{{ t.home.features.templates.title }}</h2>
+          <p>{{ t.home.features.templates.description }}</p>
+          <span class="dev-badge">{{ t.home.features.templates.badge }}</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🎨</div>
-          <h2>Customizable Design</h2>
-          <p>
-            Personalize your CV with independent dark mode controls for the interface and document.
-            Adjust colors, fonts, and layouts to match your personal brand and stand out from the
-            competition.
-          </p>
-          <span class="dev-badge">Additional customization options coming soon</span>
+          <h2>{{ t.home.features.design.title }}</h2>
+          <p>{{ t.home.features.design.description }}</p>
+          <span class="dev-badge">{{ t.home.features.design.badge }}</span>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
-          <h2>Fast & Easy</h2>
-          <p>
-            Build your CV in minutes with our intuitive interface. Simply fill in your information,
-            and watch as your professional resume takes shape in real-time with live preview
-            capabilities.
-          </p>
+          <h2>{{ t.home.features.fast.title }}</h2>
+          <p>{{ t.home.features.fast.description }}</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">📱</div>
-          <h2>Responsive Preview</h2>
-          <p>
-            View your CV exactly as it will appear with our A4 format preview. Zoom, pan, and
-            inspect every detail to ensure perfection before exporting your final document.
-          </p>
+          <h2>{{ t.home.features.preview.title }}</h2>
+          <p>{{ t.home.features.preview.description }}</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">💾</div>
-          <h2>Export to PDF</h2>
-          <p>
-            Download your CV as a high-quality PDF file ready for submission. Your document will be
-            perfectly formatted and compatible with all applicant tracking systems.
-          </p>
+          <h2>{{ t.home.features.export.title }}</h2>
+          <p>{{ t.home.features.export.description }}</p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🔒</div>
-          <h2>Privacy First</h2>
-          <p>
-            Your data stays in your browser. We don't store any personal information on our servers.
-            Everything is saved locally, giving you complete control over your sensitive career
-            information.
-          </p>
+          <h2>{{ t.home.features.privacy.title }}</h2>
+          <p>{{ t.home.features.privacy.description }}</p>
         </div>
       </div>
     </section>
 
     <!-- How It Works Section -->
     <section class="how-it-works-section">
-      <h2 class="section-title">How It Works</h2>
+      <h2 class="section-title">{{ t.home.howItWorks.title }}</h2>
       <div class="steps-container">
         <div class="step">
           <div class="step-number">1</div>
-          <h3>Enter Your Information</h3>
-          <p>Fill in your personal details, work experience, education, skills, and more.</p>
+          <h3>{{ t.home.howItWorks.step1.title }}</h3>
+          <p>{{ t.home.howItWorks.step1.description }}</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-number">2</div>
-          <h3>Customize Your Design</h3>
-          <p>Choose your preferred layout and styling options to match your personal brand.</p>
+          <h3>{{ t.home.howItWorks.step2.title }}</h3>
+          <p>{{ t.home.howItWorks.step2.description }}</p>
         </div>
         <div class="step-arrow">→</div>
         <div class="step">
           <div class="step-number">3</div>
-          <h3>Preview & Export</h3>
-          <p>Review your CV in real-time and download it as a professional PDF document.</p>
+          <h3>{{ t.home.howItWorks.step3.title }}</h3>
+          <p>{{ t.home.howItWorks.step3.description }}</p>
         </div>
       </div>
     </section>
@@ -137,13 +117,10 @@ onMounted(() => {
     <!-- CTA Section -->
     <section class="cta-section">
       <div class="cta-content">
-        <h2 class="cta-title">Ready to Build Your Professional CV?</h2>
-        <p class="cta-description">
-          Become a professional who created their perfect resume with our free, easy-to-use CV
-          generator.
-        </p>
+        <h2 class="cta-title">{{ t.home.cta.title }}</h2>
+        <p class="cta-description">{{ t.home.cta.description }}</p>
         <button @click="navigateToCreate" class="cta-button">
-          Create Your Personal CV
+          {{ t.home.cta.button }}
           <span class="button-arrow">→</span>
         </button>
       </div>
@@ -151,7 +128,7 @@ onMounted(() => {
 
     <!-- Footer -->
     <footer class="footer">
-      <p>© 2025 J. Feser. All rights reserved.</p>
+      <p>{{ t.home.footer }}</p>
     </footer>
   </div>
 </template>

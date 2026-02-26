@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUpdated, nextTick } from 'vue'
 import { useCVData, type CVProps } from '@/composables/useCVData'
+import { useLanguage } from '@/composables/useLanguage'
 
 // Props - NO isSPADark accepted!
 const props = defineProps<Omit<CVProps, 'isSPADark'>>()
+
+const { t } = useLanguage()
 
 // Define emits
 const emit = defineEmits<{
@@ -48,6 +51,7 @@ defineExpose({
 const spacingStyle = computed(() => ({
   '--main-spacing': props.mainSpacing ?? 1,
   '--sidebar-spacing': props.sidebarSpacing ?? 1,
+  '--overflow-label': `'⚠ ${t.value.cv.overflow}'`,
 }))
 
 // Overflow detection
@@ -126,7 +130,7 @@ const {
         <div v-if="personalData.photoUrl" class="header-photo">
           <img :src="personalData.photoUrl" alt="Profilfoto" :style="photoStyle" />
         </div>
-        <h1>{{ personalData.name || 'Ihr Name' }}</h1>
+        <h1>{{ personalData.name || t.cv.yourName }}</h1>
       </div>
     </div>
 
@@ -136,28 +140,28 @@ const {
       <div class="cv-sidebar">
         <!-- Contact -->
         <div class="sidebar-section">
-          <h2>Kontakt</h2>
+          <h2>{{ t.cv.contact }}</h2>
           <div class="sidebar-item" v-if="geburtsText">
-            <div class="sidebar-label">Geburt</div>
+            <div class="sidebar-label">{{ t.cv.birth }}</div>
             <div class="sidebar-value">{{ geburtsText }}</div>
           </div>
           <div class="sidebar-item" v-if="personalData.adresse">
-            <div class="sidebar-label">Adresse</div>
+            <div class="sidebar-label">{{ t.cv.address }}</div>
             <div class="sidebar-value">{{ personalData.adresse }}</div>
           </div>
           <div class="sidebar-item" v-if="personalData.telefon">
-            <div class="sidebar-label">Telefon</div>
+            <div class="sidebar-label">{{ t.cv.phone }}</div>
             <div class="sidebar-value">{{ personalData.telefon }}</div>
           </div>
           <div class="sidebar-item" v-if="personalData.email">
-            <div class="sidebar-label">E-Mail</div>
+            <div class="sidebar-label">{{ t.cv.email }}</div>
             <div class="sidebar-value">{{ personalData.email }}</div>
           </div>
         </div>
 
         <!-- Skills -->
         <div class="sidebar-section" v-if="kenntnisseArray.length > 0">
-          <h2>Kenntnisse</h2>
+          <h2>{{ t.cv.skills }}</h2>
           <div class="sidebar-tags">
             <div v-for="(kenntnis, index) in kenntnisseArray" :key="index" class="sidebar-tag">
               {{ kenntnis }}
@@ -167,7 +171,7 @@ const {
 
         <!-- Languages -->
         <div class="sidebar-section" v-if="hasAnySprache">
-          <h2>Sprachen</h2>
+          <h2>{{ t.cv.languages }}</h2>
           <div class="language-items">
             <div
               v-for="item in sprachen"
@@ -176,7 +180,7 @@ const {
               v-show="item.sprache"
             >
               <div class="language-name">
-                {{ item.sprache }} <span class="niveau-text">({{ item.niveau }})</span>
+                {{ item.sprache }} <span class="niveau-text">({{ t.form.levels[item.niveau] || item.niveau }})</span>
               </div>
               <div class="language-level">
                 <div class="level-bars">
@@ -186,11 +190,11 @@ const {
                     class="level-bar"
                     :class="{
                       filled: i <= getLevelValue(item.niveau),
-                      'native-bar': item.niveau === 'Muttersprache' && i === 5,
+                      'native-bar': item.niveau === 6 && i === 5,
                     }"
                   ></div>
                   <div
-                    v-if="item.niveau === 'Muttersprache'"
+                    v-if="item.niveau === 6"
                     class="level-bar native-extra filled"
                   ></div>
                 </div>
@@ -201,7 +205,7 @@ const {
 
         <!-- Interests -->
         <div class="sidebar-section" v-if="interessenArray.length > 0">
-          <h2>Interessen</h2>
+          <h2>{{ t.cv.interests }}</h2>
           <div class="sidebar-list">
             <div
               v-for="(interesse, index) in interessenArray"
@@ -218,7 +222,7 @@ const {
       <div class="cv-main">
         <!-- Education -->
         <div v-if="hasAnyAusbildung" class="main-section">
-          <h2>Ausbildung</h2>
+          <h2>{{ t.cv.education }}</h2>
           <div
             v-for="item in sortedAusbildungen"
             :key="item.id"
@@ -240,7 +244,7 @@ const {
 
         <!-- Work Experience -->
         <div v-if="hasAnyBerufserfahrung" class="main-section">
-          <h2>Berufserfahrung</h2>
+          <h2>{{ t.cv.workExperience }}</h2>
           <div
             v-for="item in sortedBerufserfahrungen"
             :key="item.id"
@@ -262,7 +266,7 @@ const {
 
         <!-- Courses -->
         <div v-if="hasAnyKurs" class="main-section">
-          <h2>Kurse & Zertifikate</h2>
+          <h2>{{ t.cv.courses }}</h2>
           <div
             v-for="item in sortedKurse"
             :key="item.id"
@@ -281,7 +285,7 @@ const {
 
         <!-- Awards -->
         <div v-if="hasAnyAuszeichnung" class="main-section">
-          <h2>Auszeichnungen</h2>
+          <h2>{{ t.cv.awards }}</h2>
           <div
             v-for="item in sortedAuszeichnungen"
             :key="item.id"
@@ -657,7 +661,7 @@ const {
 }
 
 .cv-a4-template .overflow-item::after {
-  content: '⚠ Überlauf';
+  content: var(--overflow-label, '⚠ Overflow');
   position: absolute;
   top: 2px;
   right: 4px;

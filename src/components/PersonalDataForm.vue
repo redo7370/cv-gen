@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCVStore } from '@/composables/useCVStore'
+import { useLanguage } from '@/composables/useLanguage'
 import PhotoAdjustPopup from './PhotoAdjustPopup.vue'
 
 const {
@@ -13,21 +14,23 @@ const {
   resetPhotoPosition,
   removePhoto,
 } = useCVStore()
+
+const { t } = useLanguage()
 </script>
 
 <template>
   <div class="personal-data-form">
-    <h2 class="section-title">Persönliche Daten</h2>
+    <h2 class="section-title">{{ t.form.personalData }}</h2>
 
     <!-- Foto Upload -->
     <div class="form-group photo-upload-section">
-      <label>Profilfoto</label>
+      <label>{{ t.form.profilePhoto }}</label>
       <div class="photo-upload-container">
         <div
           v-if="personalData.photoUrl"
           class="photo-preview"
           @click="openPhotoAdjustPopup"
-          title="Klicken zum Anpassen"
+          :title="t.form.clickToAdjust"
         >
           <img
             :src="personalData.photoUrl"
@@ -41,7 +44,7 @@ const {
             type="button"
             class="btn-remove-photo"
             @click.stop="removePhoto"
-            title="Foto entfernen"
+            :title="t.form.removePhoto"
           >
             ✕
           </button>
@@ -49,7 +52,7 @@ const {
         <div v-else class="photo-upload-placeholder" @click="triggerPhotoReUpload">
           <div class="photo-upload-label">
             <span>📷</span>
-            <span>Bild auswählen</span>
+            <span>{{ t.form.selectImage }}</span>
           </div>
         </div>
         <input
@@ -79,35 +82,35 @@ const {
     />
 
     <div class="form-group">
-      <label>Name</label>
-      <input type="text" v-model="personalData.name" placeholder="Max Mustermann" />
+      <label>{{ t.form.name }}</label>
+      <input type="text" v-model="personalData.name" :placeholder="t.form.namePlaceholder" />
     </div>
     <div class="two-column">
       <div class="form-group">
-        <label>Geburtsdatum</label>
+        <label>{{ t.form.birthDate }}</label>
         <input type="date" v-model="personalData.geburtsdatum" />
       </div>
       <div class="form-group">
-        <label>Geburtsort</label>
-        <input type="text" v-model="personalData.geburtsort" placeholder="Berlin" />
+        <label>{{ t.form.birthPlace }}</label>
+        <input type="text" v-model="personalData.geburtsort" :placeholder="t.form.birthPlacePlaceholder" />
       </div>
     </div>
     <div class="form-group">
-      <label>Adresse</label>
+      <label>{{ t.form.address }}</label>
       <input
         type="text"
         v-model="personalData.adresse"
-        placeholder="Musterstraße 123, 12345 Berlin"
+        :placeholder="t.form.addressPlaceholder"
       />
     </div>
     <div class="two-column">
       <div class="form-group">
-        <label>Telefon</label>
-        <input type="tel" v-model="personalData.telefon" placeholder="+49 123 456789" />
+        <label>{{ t.form.phone }}</label>
+        <input type="tel" v-model="personalData.telefon" :placeholder="t.form.phonePlaceholder" />
       </div>
       <div class="form-group">
-        <label>E-Mail</label>
-        <input type="email" v-model="personalData.email" placeholder="max@beispiel.de" />
+        <label>{{ t.form.email }}</label>
+        <input type="email" v-model="personalData.email" :placeholder="t.form.emailPlaceholder" />
       </div>
     </div>
   </div>

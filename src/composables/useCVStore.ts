@@ -108,6 +108,29 @@ function loadFromLocalStorage() {
         sprachen.value = data.sprachen || []
       }
 
+      // Migrate legacy string niveau values to numeric 1-6
+      const niveauMigration: Record<string, number> = {
+        // Legacy German keys
+        Grundkenntnisse: 1,
+        'Konversationsfähig': 2,
+        Gut: 3,
+        Professionell: 4,
+        'Fließend': 5,
+        Muttersprache: 6,
+        // Previous English keys
+        basic: 1,
+        conversational: 2,
+        good: 3,
+        professional: 4,
+        fluent: 5,
+        native: 6,
+      }
+      for (const item of sprachen.value) {
+        if (typeof item.niveau === 'string') {
+          item.niveau = niveauMigration[item.niveau] ?? 1
+        }
+      }
+
       kenntnisse.value = data.kenntnisse || ''
       interessen.value = data.interessen || ''
       mainSpacing.value = data.mainSpacing ?? 1
@@ -220,7 +243,7 @@ function addSprache() {
   sprachen.value.push({
     id: sprachenCounter++,
     sprache: '',
-    niveau: 'Grundkenntnisse',
+    niveau: 1,
   })
 }
 

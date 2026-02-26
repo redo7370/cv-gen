@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
 
 export interface PersonalData {
   name: string
@@ -39,13 +40,7 @@ export interface AuszeichnungItem {
 export interface SprachItem {
   id: number
   sprache: string
-  niveau:
-    | 'Grundkenntnisse'
-    | 'Konversationsfähig'
-    | 'Gut'
-    | 'Professionell'
-    | 'Fließend'
-    | 'Muttersprache'
+  niveau: number // 1-6: 1=Basic, 2=Conversational, 3=Good, 4=Professional, 5=Fluent, 6=Native
 }
 
 export interface CVProps {
@@ -67,14 +62,37 @@ export interface CVProps {
  * Composable für gemeinsame CV-Datenverarbeitung
  */
 export function useCVData(props: CVProps) {
+  const { currentLanguage } = useLanguage()
+
+  // Locale mapping for date formatting
+  const localeMap: Record<string, string> = {
+    de: 'de-DE',
+    en: 'en-US',
+    ru: 'ru-RU',
+    fr: 'fr-FR',
+    es: 'es-ES',
+    it: 'it-IT',
+    sq: 'sq-AL',
+    uk: 'uk-UA',
+    el: 'el-GR',
+  }
+
   // Hilfsfunktion zum Parsen von Datumsangaben
   const parseDate = (dateStr: string): number => {
     if (!dateStr) return 0
     // Versuche verschiedene Formate: MM/YYYY, YYYY, oder "heute"/"aktuell"
+    const lower = dateStr.toLowerCase()
     const heute =
-      dateStr.toLowerCase().includes('heute') ||
-      dateStr.toLowerCase().includes('aktuell') ||
-      dateStr.toLowerCase().includes('present')
+      lower.includes('heute') ||
+      lower.includes('aktuell') ||
+      lower.includes('present') ||
+      lower.includes('aujourd') ||
+      lower.includes('actualidad') ||
+      lower.includes('presente') ||
+      lower.includes('tani') ||
+      lower.includes('настоящ') ||
+      lower.includes('теперіш') ||
+      lower.includes('σήμερα')
     if (heute) return Date.now()
 
     const parts = dateStr.split(/[\/\-\.]/).map((p) => p.trim())
@@ -92,16 +110,9 @@ export function useCVData(props: CVProps) {
   }
 
   // Konvertiert Sprachniveau zu numerischem Wert für Balkenanzeige
-  const getLevelValue = (niveau: string): number => {
-    const levels: { [key: string]: number } = {
-      Grundkenntnisse: 1,
-      Konversationsfähig: 2,
-      Gut: 3,
-      Professionell: 4,
-      Fließend: 5,
-      Muttersprache: 6,
-    }
-    return levels[niveau] || 0
+  const getLevelValue = (niveau: number): number => {
+    // niveau is already a number 1-6, clamp for safety
+    return Math.max(0, Math.min(6, niveau))
   }
 
   // Computed Properties
@@ -109,7 +120,8 @@ export function useCVData(props: CVProps) {
     if (!props.personalData.geburtsdatum && !props.personalData.geburtsort) return ''
     let text = ''
     if (props.personalData.geburtsdatum) {
-      text += new Date(props.personalData.geburtsdatum).toLocaleDateString('de-DE')
+      const locale = localeMap[currentLanguage.value] || 'de-DE'
+      text += new Date(props.personalData.geburtsdatum).toLocaleDateString(locale)
     }
     if (props.personalData.geburtsort) {
       text += (props.personalData.geburtsdatum ? ', ' : '') + props.personalData.geburtsort

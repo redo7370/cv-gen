@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t } = useLanguage()
 
 const props = defineProps<{
   photoUrl: string
@@ -33,22 +36,21 @@ function onZoomInput(event: Event) {
   <Teleport to="body">
     <div class="photo-popup-overlay" @click.self="emit('close')">
       <div class="photo-popup" :class="{ dark: isDark }">
-        <h3>Bild ausrichten</h3>
+        <h3>{{ t.photo.alignImage }}</h3>
         <p class="popup-hint">
-          Passen Sie die Position und den Zoom an, damit Ihr Gesicht richtig im Kreis angezeigt
-          wird.
+          {{ t.photo.hint }}
         </p>
 
         <!-- Live Circle Preview -->
         <div class="popup-preview-circle">
-          <img :src="photoUrl" alt="Vorschau" :style="previewStyle" />
+          <img :src="photoUrl" :alt="t.photo.preview" :style="previewStyle" />
         </div>
 
         <!-- Controls -->
         <div class="popup-controls">
           <div class="popup-control-group">
             <label
-              >Horizontal: <strong>{{ photoOffsetX }}%</strong></label
+              >{{ t.photo.horizontal }}: <strong>{{ photoOffsetX }}%</strong></label
             >
             <input
               type="range"
@@ -62,7 +64,7 @@ function onZoomInput(event: Event) {
           </div>
           <div class="popup-control-group">
             <label
-              >Vertikal: <strong>{{ photoOffsetY }}%</strong></label
+              >{{ t.photo.vertical }}: <strong>{{ photoOffsetY }}%</strong></label
             >
             <input
               type="range"
@@ -76,7 +78,7 @@ function onZoomInput(event: Event) {
           </div>
           <div class="popup-control-group">
             <label
-              >Zoom: <strong>{{ Math.round(photoZoom * 100) }}%</strong></label
+              >{{ t.photo.zoom }}: <strong>{{ Math.round(photoZoom * 100) }}%</strong></label
             >
             <input type="range" min="100" max="300" :value="photoZoom * 100" @input="onZoomInput" />
           </div>
@@ -84,12 +86,12 @@ function onZoomInput(event: Event) {
 
         <div class="popup-actions">
           <button type="button" class="btn popup-btn-upload" @click="emit('reupload')">
-            📷 Neues Bild
+            📷 {{ t.photo.newImage }}
           </button>
           <button type="button" class="btn popup-btn-reset" @click="emit('reset')">
-            ↺ Zurücksetzen
+            ↺ {{ t.photo.reset }}
           </button>
-          <button type="button" class="btn popup-btn-done" @click="emit('close')">✓ Fertig</button>
+          <button type="button" class="btn popup-btn-done" @click="emit('close')">✓ {{ t.photo.done }}</button>
         </div>
       </div>
     </div>

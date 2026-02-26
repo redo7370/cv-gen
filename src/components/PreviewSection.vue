@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CVPreview from './CVPreview.vue'
 import { useCVStore } from '@/composables/useCVStore'
+import { useLanguage } from '@/composables/useLanguage'
 
 const {
   personalData,
@@ -18,6 +19,8 @@ const {
   handleOverflow,
 } = useCVStore()
 
+const { t } = useLanguage()
+
 const emit = defineEmits<{
   exportPdf: []
 }>()
@@ -28,7 +31,7 @@ const emit = defineEmits<{
     <div class="spacing-controls" :class="{ dark: isSPADark }">
       <div class="spacing-control">
         <label>
-          Hauptbereich Abstände: <strong>{{ Math.round(mainSpacing * 100) }}%</strong>
+          {{ t.preview.mainSpacing }}: <strong>{{ Math.round(mainSpacing * 100) }}%</strong>
         </label>
         <input
           type="range"
@@ -40,7 +43,7 @@ const emit = defineEmits<{
       </div>
       <div class="spacing-control">
         <label>
-          Seitenleiste Abstände: <strong>{{ Math.round(sidebarSpacing * 100) }}%</strong>
+          {{ t.preview.sidebarSpacing }}: <strong>{{ Math.round(sidebarSpacing * 100) }}%</strong>
         </label>
         <input
           type="range"
@@ -53,12 +56,11 @@ const emit = defineEmits<{
     </div>
 
     <div v-if="isOverflowing" class="overflow-warning" :class="{ dark: isSPADark }">
-      ⚠️ Der Inhalt überschreitet eine A4-Seite! Die rot markierten Bereiche in der Vorschau werden
-      im PDF abgeschnitten. Bitte Einträge kürzen/entfernen oder Abstände verkleinern.
+      ⚠️ {{ t.preview.overflowWarning }}
     </div>
 
     <button class="btn btn-export" :class="{ dark: isSPADark }" @click="emit('exportPdf')">
-      📥 Als PDF exportieren
+      📥 {{ t.preview.exportPdf }}
     </button>
 
     <CVPreview

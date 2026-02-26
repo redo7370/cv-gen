@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCVStore } from '@/composables/useCVStore'
+import { useLanguage } from '@/composables/useLanguage'
 import PersonalDataForm from './PersonalDataForm.vue'
 
 const {
@@ -23,6 +24,8 @@ const {
   addSprache,
   removeSprache,
 } = useCVStore()
+
+const { t } = useLanguage()
 </script>
 
 <template>
@@ -30,7 +33,7 @@ const {
     <PersonalDataForm />
 
     <!-- Ausbildung -->
-    <h2 class="section-title">Ausbildung</h2>
+    <h2 class="section-title">{{ t.form.education }}</h2>
     <div
       class="dynamic-item"
       v-for="item in ausbildungen"
@@ -39,35 +42,35 @@ const {
     >
       <button class="btn btn-remove" @click="removeAusbildung(item.id)">✕</button>
       <div class="form-group">
-        <label>Abschluss/Titel</label>
-        <input type="text" v-model="item.title" placeholder="Bachelor of Science" />
+        <label>{{ t.form.degreeTitle }}</label>
+        <input type="text" v-model="item.title" :placeholder="t.form.degreePlaceholder" />
       </div>
       <div class="form-group">
-        <label>Institution</label>
-        <input type="text" v-model="item.subtitle" placeholder="Universität Berlin" />
+        <label>{{ t.form.institution }}</label>
+        <input type="text" v-model="item.subtitle" :placeholder="t.form.institutionPlaceholder" />
       </div>
       <div class="two-column">
         <div class="form-group">
-          <label>Von</label>
-          <input type="text" v-model="item.dateFrom" placeholder="09/2015" />
+          <label>{{ t.form.from }}</label>
+          <input type="text" v-model="item.dateFrom" :placeholder="t.form.fromPlaceholder" />
         </div>
         <div class="form-group">
-          <label>Bis</label>
-          <input type="text" v-model="item.dateTo" placeholder="07/2018" />
+          <label>{{ t.form.to }}</label>
+          <input type="text" v-model="item.dateTo" :placeholder="t.form.toPlaceholder" />
         </div>
       </div>
       <div v-if="dateErrors.has(item.id)" class="date-error-message">
-        ⚠️ Fehler: Das End-Datum muss nach dem Start-Datum liegen!
+        ⚠️ {{ t.form.dateError }}
       </div>
       <div class="form-group">
-        <label>Beschreibung</label>
-        <textarea v-model="item.description" placeholder="Details zur Ausbildung..."></textarea>
+        <label>{{ t.form.description }}</label>
+        <textarea v-model="item.description" :placeholder="t.form.descriptionPlaceholder"></textarea>
       </div>
     </div>
-    <button class="btn btn-add" @click="addAusbildung">+ Ausbildung hinzufügen</button>
+    <button class="btn btn-add" @click="addAusbildung">{{ t.form.addEducation }}</button>
 
     <!-- Berufserfahrung -->
-    <h2 class="section-title">Berufserfahrung</h2>
+    <h2 class="section-title">{{ t.form.workExperience }}</h2>
     <div
       class="dynamic-item"
       v-for="item in berufserfahrungen"
@@ -76,111 +79,111 @@ const {
     >
       <button class="btn btn-remove" @click="removeBerufserfahrung(item.id)">✕</button>
       <div class="form-group">
-        <label>Position</label>
-        <input type="text" v-model="item.title" placeholder="Software Entwickler" />
+        <label>{{ t.form.position }}</label>
+        <input type="text" v-model="item.title" :placeholder="t.form.positionPlaceholder" />
       </div>
       <div class="form-group">
-        <label>Unternehmen</label>
-        <input type="text" v-model="item.subtitle" placeholder="Tech GmbH" />
+        <label>{{ t.form.company }}</label>
+        <input type="text" v-model="item.subtitle" :placeholder="t.form.companyPlaceholder" />
       </div>
       <div class="two-column">
         <div class="form-group">
-          <label>Von</label>
-          <input type="text" v-model="item.dateFrom" placeholder="01/2019" />
+          <label>{{ t.form.from }}</label>
+          <input type="text" v-model="item.dateFrom" :placeholder="t.form.workFromPlaceholder" />
         </div>
         <div class="form-group">
-          <label>Bis</label>
-          <input type="text" v-model="item.dateTo" placeholder="Heute" />
+          <label>{{ t.form.to }}</label>
+          <input type="text" v-model="item.dateTo" :placeholder="t.form.workToPlaceholder" />
         </div>
       </div>
       <div v-if="dateErrors.has(item.id)" class="date-error-message">
-        ⚠️ Fehler: Das End-Datum muss nach dem Start-Datum liegen!
+        ⚠️ {{ t.form.dateError }}
       </div>
       <div class="form-group">
-        <label>Beschreibung</label>
+        <label>{{ t.form.description }}</label>
         <textarea
           v-model="item.description"
-          placeholder="Aufgaben und Verantwortlichkeiten..."
+          :placeholder="t.form.workDescriptionPlaceholder"
         ></textarea>
       </div>
     </div>
-    <button class="btn btn-add" @click="addBerufserfahrung">+ Berufserfahrung hinzufügen</button>
+    <button class="btn btn-add" @click="addBerufserfahrung">{{ t.form.addWorkExperience }}</button>
 
     <!-- Kurse/Zertifikate -->
-    <h2 class="section-title">Kurse & Zertifikate</h2>
+    <h2 class="section-title">{{ t.form.courses }}</h2>
     <div class="dynamic-item" v-for="item in kurse" :key="item.id">
       <button class="btn btn-remove" @click="removeKurs(item.id)">✕</button>
       <div class="form-group">
-        <label>Kurs/Zertifikat</label>
+        <label>{{ t.form.courseCertificate }}</label>
         <input type="text" v-model="item.title" placeholder="AWS Certified Solutions Architect" />
       </div>
       <div class="form-group">
-        <label>Anbieter</label>
-        <input type="text" v-model="item.anbieter" placeholder="Amazon Web Services" />
+        <label>{{ t.form.provider }}</label>
+        <input type="text" v-model="item.anbieter" :placeholder="t.form.providerPlaceholder" />
       </div>
       <div class="form-group">
-        <label>Datum</label>
-        <input type="text" v-model="item.datum" placeholder="06/2023" />
+        <label>{{ t.form.date }}</label>
+        <input type="text" v-model="item.datum" :placeholder="t.form.datePlaceholder" />
       </div>
     </div>
-    <button class="btn btn-add" @click="addKurs">+ Kurs/Zertifikat hinzufügen</button>
+    <button class="btn btn-add" @click="addKurs">{{ t.form.addCourse }}</button>
 
     <!-- Auszeichnungen -->
-    <h2 class="section-title">Auszeichnungen</h2>
+    <h2 class="section-title">{{ t.form.awards }}</h2>
     <div class="dynamic-item" v-for="item in auszeichnungen" :key="item.id">
       <button class="btn btn-remove" @click="removeAuszeichnung(item.id)">✕</button>
       <div class="form-group">
-        <label>Auszeichnung</label>
-        <input type="text" v-model="item.title" placeholder="Mitarbeiter des Jahres" />
+        <label>{{ t.form.award }}</label>
+        <input type="text" v-model="item.title" :placeholder="t.form.awardPlaceholder" />
       </div>
       <div class="form-group">
-        <label>Verliehen von</label>
-        <input type="text" v-model="item.verliehen" placeholder="Tech GmbH" />
+        <label>{{ t.form.awardedBy }}</label>
+        <input type="text" v-model="item.verliehen" :placeholder="t.form.awardedByPlaceholder" />
       </div>
       <div class="form-group">
-        <label>Datum</label>
-        <input type="text" v-model="item.datum" placeholder="12/2022" />
+        <label>{{ t.form.date }}</label>
+        <input type="text" v-model="item.datum" :placeholder="t.form.awardDatePlaceholder" />
       </div>
     </div>
-    <button class="btn btn-add" @click="addAuszeichnung">+ Auszeichnung hinzufügen</button>
+    <button class="btn btn-add" @click="addAuszeichnung">{{ t.form.addAward }}</button>
 
     <!-- Kenntnisse -->
-    <h2 class="section-title">Kenntnisse</h2>
+    <h2 class="section-title">{{ t.form.skills }}</h2>
     <div class="form-group">
-      <label>Kenntnisse (durch Komma getrennt)</label>
+      <label>{{ t.form.skillsLabel }}</label>
       <textarea
         v-model="kenntnisse"
-        placeholder="JavaScript, Python, Projektmanagement, etc."
+        :placeholder="t.form.skillsPlaceholder"
       ></textarea>
     </div>
 
     <!-- Sprachen -->
-    <h2 class="section-title">Sprachen</h2>
+    <h2 class="section-title">{{ t.form.languages }}</h2>
     <div class="dynamic-item" v-for="item in sprachen" :key="item.id">
       <button class="btn btn-remove" @click="removeSprache(item.id)">✕</button>
       <div class="form-group">
-        <label>Sprache</label>
-        <input type="text" v-model="item.sprache" placeholder="z.B. Deutsch" />
+        <label>{{ t.form.language }}</label>
+        <input type="text" v-model="item.sprache" :placeholder="t.form.languagePlaceholder" />
       </div>
       <div class="form-group">
-        <label>Niveau</label>
+        <label>{{ t.form.level }}</label>
         <select v-model="item.niveau" class="niveau-select">
-          <option value="Grundkenntnisse">Grundkenntnisse</option>
-          <option value="Konversationsfähig">Konversationsfähig</option>
-          <option value="Gut">Gut</option>
-          <option value="Professionell">Professionell</option>
-          <option value="Fließend">Fließend</option>
-          <option value="Muttersprache">Muttersprache</option>
+          <option :value="1">{{ t.form.levels[1] }}</option>
+          <option :value="2">{{ t.form.levels[2] }}</option>
+          <option :value="3">{{ t.form.levels[3] }}</option>
+          <option :value="4">{{ t.form.levels[4] }}</option>
+          <option :value="5">{{ t.form.levels[5] }}</option>
+          <option :value="6">{{ t.form.levels[6] }}</option>
         </select>
       </div>
     </div>
-    <button class="btn btn-add" @click="addSprache">+ Sprache hinzufügen</button>
+    <button class="btn btn-add" @click="addSprache">{{ t.form.addLanguage }}</button>
 
     <!-- Interessen -->
-    <h2 class="section-title">Interessen</h2>
+    <h2 class="section-title">{{ t.form.interests }}</h2>
     <div class="form-group">
-      <label>Interessen (durch Komma getrennt)</label>
-      <textarea v-model="interessen" placeholder="Lesen, Sport, Reisen, etc."></textarea>
+      <label>{{ t.form.interestsLabel }}</label>
+      <textarea v-model="interessen" :placeholder="t.form.interestsPlaceholder"></textarea>
     </div>
   </div>
 </template>

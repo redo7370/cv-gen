@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import CVA4Template from './CVA4Template.vue'
+import { useLanguage } from '@/composables/useLanguage'
 import type { CVProps } from '@/composables/useCVData'
 
 const props = defineProps<CVProps>()
+
+const { t } = useLanguage()
 
 const emit = defineEmits<{
   overflow: [detected: boolean]
@@ -111,17 +114,17 @@ const handleWheel = (e: WheelEvent) => {
   <div class="cv-preview-wrapper">
     <!-- Zoom Controls (folgen SPA Dark Mode vom Navbar-Button) -->
     <div class="zoom-controls" :class="zoomControlsClasses">
-      <button @click="zoomOut" class="zoom-btn" title="Verkleinern">−</button>
+      <button @click="zoomOut" class="zoom-btn" :title="t.preview.zoomOut">−</button>
       <span class="zoom-level">{{ Math.round(zoom * 100) }}%</span>
-      <button @click="zoomIn" class="zoom-btn" title="Vergrößern">+</button>
-      <button @click="resetZoom" class="zoom-btn reset-btn" title="Zurücksetzen">↺</button>
+      <button @click="zoomIn" class="zoom-btn" :title="t.preview.zoomIn">+</button>
+      <button @click="resetZoom" class="zoom-btn reset-btn" :title="t.preview.resetZoom">↺</button>
       <div class="controls-divider"></div>
       <!-- Theme-Button steuert A4 Template Dark Mode (INDEPENDENT) -->
       <button
         @click="handleToggleA4Theme"
         class="zoom-btn theme-btn"
         type="button"
-        title="A4 Template Theme umschalten"
+        :title="t.preview.toggleA4Theme"
       >
         <span v-if="a4DarkMode">☀️</span>
         <span v-else>🌙</span>
